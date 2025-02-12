@@ -1,0 +1,40 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/example
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_DATASOURCE_DB: example
+    networks:
+      - example-network
+
+  postgres:
+    image: postgres:latest
+    container_name: example-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: example
+    ports:
+      - "5432:5432"
+    networks:
+      - example-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "admin", "-d", "example" ]
+      interval: 5s
+      retries: 5
+
+networks:
+  example-network:
+
+volumes:
+  postgres-data:
