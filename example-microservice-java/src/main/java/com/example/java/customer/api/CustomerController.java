@@ -1,13 +1,13 @@
 package com.example.java.customer.api;
 
-import com.example.java.customer.service.CustomerServiceImpl;
 import com.example.java.customer.api.dto.CustomerCreateDto;
 import com.example.java.customer.api.dto.CustomerDto;
 import com.example.java.customer.api.dto.CustomerUpdateDto;
+import com.example.java.customer.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,11 +26,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customers")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Validated
 public class CustomerController {
 
-    private final CustomerServiceImpl customerServiceImpl;
+    private final CustomerService customerService;
 
     @Operation(summary = "Gets customer details", description = "Returns customer details by id")
     @ApiResponses(value = {
@@ -39,21 +39,21 @@ public class CustomerController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID id) {
-        return ResponseEntity.of(customerServiceImpl.getCustomer(id));
+        return ResponseEntity.of(customerService.getCustomer(id));
     }
 
     @Operation(summary = "Gets list of customers", description = "Returns list of customers with optional filtering")
     @ApiResponse(responseCode = "200", description = "Returned list of customers")
     @GetMapping
     public ResponseEntity<List<CustomerDto>> listCustomers(@RequestParam(required = false) String name, @RequestParam(required = false) String email) {
-        return ResponseEntity.ok(customerServiceImpl.listCustomers());
+        return ResponseEntity.ok(customerService.listCustomers());
     }
 
     @Operation(summary = "Creates a new customer", description = "Creates a new customer returning its details")
     @ApiResponse(responseCode = "201", description = "New customer created")
     @PostMapping
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerCreateDto customerCreateDto) {
-        CustomerDto createdCustomer = customerServiceImpl.createCustomer(customerCreateDto);
+        CustomerDto createdCustomer = customerService.createCustomer(customerCreateDto);
         return ResponseEntity.created(URI.create("/api/customers/" + createdCustomer.getId())).body(createdCustomer);
     }
 
@@ -64,7 +64,7 @@ public class CustomerController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable UUID id, @RequestBody CustomerUpdateDto customerUpdateDto) {
-        CustomerDto updatedCustomer = customerServiceImpl.updateCustomer(id, customerUpdateDto);
+        CustomerDto updatedCustomer = customerService.updateCustomer(id, customerUpdateDto);
         return ResponseEntity.ok(updatedCustomer);
     }
 
@@ -75,7 +75,7 @@ public class CustomerController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
-        customerServiceImpl.deleteCustomer(id);
+        customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
 

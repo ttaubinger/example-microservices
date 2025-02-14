@@ -1,12 +1,12 @@
 package com.example.java.customer.service;
 
+import com.example.java.customer.api.CustomerApiMapper;
 import com.example.java.customer.api.dto.CustomerCreateDto;
 import com.example.java.customer.api.dto.CustomerDto;
 import com.example.java.customer.api.dto.CustomerUpdateDto;
-import com.example.java.customer.api.CustomerApiMapper;
 import com.example.java.customer.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class CustomerServiceImpl implements CustomerService {
 

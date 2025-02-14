@@ -1,6 +1,7 @@
 package com.example.java.customer.api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
 public class CustomerDto {
 
     private UUID id;
